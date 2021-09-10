@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 // const validateWith = require("../middleware/validation");
 
 exports.login = async (req, res, next) => {
@@ -10,19 +10,19 @@ exports.register = async (req, res, next) => {
   try {
     const { email, passWord, userName } = req.body;
 
-    const token = jwt.sign(
-      { userName, passWord, email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      }
-    );
+    // const token = jwt.sign(
+    //   { userName, passWord, email },
+    //   process.env.JWT_SECRET,
+    //   {
+    //     expiresIn: process.env.JWT_EXPIRES_IN,
+    //   }
+    // );
 
     let user = new userModel({
       userName,
       passWord,
       email,
-      pushToken: token,
+      // pushToken: token,
     });
 
     const existingEmail = await userModel.findOne({ email: email });
