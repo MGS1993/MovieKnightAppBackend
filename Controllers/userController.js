@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 // const validateWith = require("../middleware/validation");
 
 exports.login = async (req, res, next) => {
@@ -8,14 +9,23 @@ exports.login = async (req, res, next) => {
 exports.register = async (req, res, next) => {
   try {
     const { email, passWord, userName } = req.body;
+
+    const token = jwt.sign(
+      { userName, passWord, email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
+
     let user = new userModel({
       userName,
       passWord,
       email,
+      pushToken: token,
     });
-    console.log(user);
+
     const existingEmail = await userModel.findOne({ email: email });
-    console.log("test", existingEmail);
     if (existingEmail !== null)
       return res.status(500).json({ msg: "Email is already taken" });
 
@@ -26,7 +36,7 @@ exports.register = async (req, res, next) => {
             .status(500)
             .json({ msg: "Error in userController save function", err });
 
-        res.status(200).json({ msg: "User successfully saved" });
+        return res.status(200).json({ msg: "User successfully saved" });
       }
     );
   } catch (error) {
