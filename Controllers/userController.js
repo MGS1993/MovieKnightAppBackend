@@ -4,20 +4,20 @@ const jwt = require("jsonwebtoken");
 //TODO add bcrypt encryption
 exports.login = async (req, res, next) => {
   //TODO remove camel case from usermodel ergo login
-
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
-  if (user === null) {
-    return res.status(400).json({ msg: "Invalid credentials" });
-  }
 
-  if (user.passWord === password) {
+  if (user === null) return res.status(400).json({ msg: "No user found" });
+
+  if (user.passWord !== password || user.email !== email)
+    return res.status(400).json({ msg: "Invalid credentials." });
+
+  if (user.passWord === password && user.email === email) {
     const { userName: username } = user;
     const token = jwt.sign(
-      { username, password, email, expiresIn: process.env.JWT_EXPIRES_IN },
+      { username, email, expiresIn: process.env.JWT_EXPIRES_IN },
       process.env.JWT_SECRET
     );
-    console.log(token);
     return res.status(200).json({ msg: "Successfully logged in", token });
   }
 };
@@ -31,7 +31,6 @@ exports.register = async (req, res, next) => {
       userName,
       passWord,
       email,
-      // pushToken: token,
     });
 
     const existingEmail = await userModel.findOne({ email: email });
