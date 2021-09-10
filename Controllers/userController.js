@@ -1,22 +1,31 @@
 const userModel = require("../models/userModel");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 // const validateWith = require("../middleware/validation");
-
+//TODO add bcrypt encryption
 exports.login = async (req, res, next) => {
+  //TODO remove camel case from usermodel ergo login
+
   const { email, password } = req.body;
+  const user = await userModel.findOne({ email: email });
+  if (user === null) {
+    return res.status(400).json({ msg: "Invalid credentials" });
+  }
+
+  if (user.passWord === password) {
+    const { userName: username } = user;
+    const token = jwt.sign(
+      { username, password, email, expiresIn: process.env.JWT_EXPIRES_IN },
+      process.env.JWT_SECRET
+    );
+    console.log(token);
+    return res.status(200).json({ msg: "Successfully logged in", token });
+  }
 };
 
 exports.register = async (req, res, next) => {
   try {
+    //TODO remove camel case from password
     const { email, passWord, userName } = req.body;
-
-    // const token = jwt.sign(
-    //   { userName, passWord, email },
-    //   process.env.JWT_SECRET,
-    //   {
-    //     expiresIn: process.env.JWT_EXPIRES_IN,
-    //   }
-    // );
 
     let user = new userModel({
       userName,
