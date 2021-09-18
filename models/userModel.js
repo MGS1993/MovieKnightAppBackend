@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   passWord: { type: String, required: true },
   email: { type: String, required: true },
   expoPushToken: { type: String },
+  tracking: [{ type: Schema.Types.String, ref: "TvShows" }],
 });
 
 module.exports = mongoose.model("Users", UserSchema);

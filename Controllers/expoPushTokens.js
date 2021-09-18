@@ -7,7 +7,9 @@ exports.registerToken = async (req, res) => {
 
     user.expoPushToken = token.data;
     await user.save();
-    return res.status(200).json({ user });
+    return res
+      .status(200)
+      .json({ msg: `userRegistered, ${user.expoPushToken}` });
   } catch (error) {
     console.log("error registering token", error);
   }
