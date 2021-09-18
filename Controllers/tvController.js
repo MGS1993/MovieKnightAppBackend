@@ -47,3 +47,11 @@ exports.trackTvShow = async (req, res, next) => {
     console.log("error tracking tv show", error);
   }
 };
+
+exports.getTrackedShows = async (req, res) => {
+  console.log(req.params);
+  console.log("tests");
+  TvModel.find({ trackedBy: req.params.email })
+    .then((tvList) => res.json(tvList))
+    .catch((err) => res.status(400).json({ Error: +err }));
+};
