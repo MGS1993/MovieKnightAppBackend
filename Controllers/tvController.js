@@ -65,9 +65,22 @@ exports.getTrackedShows = async (req, res) => {
 };
 
 exports.deleteShow = async (req, res) => {
-  console.log(req.params);
-
-  // TvModel.findByIdAndDelete(req.params.id)
-  //   .then(() => res.json("Show no longer being tracked"))
-  //   .catch((err) => res.status(400).json("Error: " + err));
+  try {
+    const currentUser = await userModel.find({ email: req.params.email });
+    const currentUserId = currentUser[0]._id;
+    const target = await TvModel.find({
+      trackedBy: currentUserId,
+      id: req.params.id,
+    });
+    const targetId = target[0]._id;
+    await TvModel.findByIdAndDelete(targetId);
+    const updatedList = await TvModel.find({
+      trackedBy: currentUserId,
+    });
+    return res
+      .status(200)
+      .json({ msg: "Show no longer being tracked", data: updatedList });
+  } catch (error) {
+    console.log(error);
+  }
 };
