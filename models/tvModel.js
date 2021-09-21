@@ -9,7 +9,7 @@ const TvSchema = new Schema({
   nextAirDate: { type: String },
   noEpisodes: { type: Number, required: true },
   noSeasons: { type: Number, required: true },
-  trackedBy: [{ type: Schema.Types.String, ref: "Users" }],
+  trackedBy: { type: Schema.Types.ObjectId, ref: "Users" },
 });
 
 module.exports = mongoose.model("TvShows", TvSchema);
