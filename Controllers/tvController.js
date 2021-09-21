@@ -54,9 +54,14 @@ exports.trackTvShow = async (req, res, next) => {
 };
 
 exports.getTrackedShows = async (req, res) => {
-  TvModel.find({ trackedBy: req.params.email })
-    .then((tvList) => res.json(tvList))
-    .catch((err) => res.status(400).json({ Error: +err }));
+  try {
+    const currentUser = await userModel.find({ email: req.params.email });
+    const currentUserId = currentUser[0]._id;
+    const myTrackedShows = await TvModel.find({ trackedBy: currentUserId });
+    return res.status(200).json(myTrackedShows);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.deleteShow = async (req, res) => {
