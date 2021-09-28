@@ -1,5 +1,6 @@
 const TvModel = require("../models/tvModel");
 const userModel = require("../models/userModel");
+const sendNotification = require("../utilities/pushNotifications");
 
 exports.trackTvShow = async (req, res, next) => {
   try {
@@ -34,6 +35,7 @@ exports.trackTvShow = async (req, res, next) => {
     });
 
     if (trackedArr.includes(tvShow.trackedBy.toString())) {
+      sendNotification(currentUser[0].expoPushToken, "Already Tracked");
       return res.status(500).json({ msg: "Tv show already being tracked." });
     } else {
       tvShow.save(
@@ -43,6 +45,10 @@ exports.trackTvShow = async (req, res, next) => {
               .status(500)
               .json({ msg: "Error in tvController save function", err });
           } else {
+            sendNotification(
+              currentUser[0].expoPushToken,
+              "Saved Successfully"
+            );
             res.json({ msg: "TV Show Saved" }).status(200);
           }
         }
