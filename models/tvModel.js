@@ -10,6 +10,7 @@ const TvSchema = new Schema({
   noEpisodes: { type: Number, required: true },
   noSeasons: { type: Number, required: true },
   trackedBy: { type: Schema.Types.ObjectId, ref: "Users" },
+  identifier: { type: String },
 });
 
 module.exports = mongoose.model("TvShows", TvSchema);
