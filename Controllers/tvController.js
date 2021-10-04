@@ -36,7 +36,6 @@ exports.trackTvShow = async (req, res, next) => {
     });
 
     if (trackedArr.includes(tvShow.trackedBy.toString())) {
-      // sendNotification(currentUser[0].expoPushToken, "Already Tracked");
       return res.status(500).json({ msg: "Tv show already being tracked." });
     } else {
       tvShow.save(
@@ -46,10 +45,6 @@ exports.trackTvShow = async (req, res, next) => {
               .status(500)
               .json({ msg: "Error in tvController save function", err });
           } else {
-            // sendNotification(
-            //   currentUser[0].expoPushToken,
-            //   "Saved Successfully"
-            // );
             res.json({ msg: "TV Show Saved", tvShow }).status(200);
           }
         }
@@ -64,8 +59,8 @@ exports.appendSchedule = async (req, res) => {
   try {
     const { _id, identifier } = req.params;
     const targetShow = await tvModel.findById(_id);
-    console.log(targetShow);
     targetShow.identifier = identifier;
+    console.log(targetShow);
     await targetShow.save();
     return res.status(200).json({ msg: "test" });
   } catch (error) {
@@ -93,19 +88,24 @@ exports.deleteShow = async (req, res) => {
       trackedBy: currentUserId,
       id: req.params.id,
     });
-    console.log("target", target);
+    // console.log("target", target);
     const targetId = target[0]._id;
     await TvModel.findByIdAndDelete(targetId);
     const updatedList = await TvModel.find({
       trackedBy: currentUserId,
     });
-    return res
-      .status(200)
-      .json({
-        msg: "Show no longer being tracked",
-        data: updatedList,
-        identifier: target[0].identifier,
-      });
+    return res.status(200).json({
+      msg: "Show no longer being tracked",
+      data: updatedList,
+      identifier: target[0].identifier,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getShowData = async (req, res) => {
+  try {
   } catch (error) {
     console.log(error);
   }
