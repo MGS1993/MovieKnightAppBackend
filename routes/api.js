@@ -12,7 +12,6 @@ router.post("/registerToken", expoPushToken.registerToken);
 
 router.post("/track_tv_show", tvController.trackTvShow);
 router.get("/get_tracked_shows/:email", tvController.getTrackedShows);
-router.get("/get_show_data", tvController.getShowData);
 
 router.get("/append_schedule/:_id/:identifier", tvController.appendSchedule);
 

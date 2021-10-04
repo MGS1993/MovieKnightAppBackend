@@ -103,10 +103,3 @@ exports.deleteShow = async (req, res) => {
     console.log(error);
   }
 };
-
-exports.getShowData = async (req, res) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-};
