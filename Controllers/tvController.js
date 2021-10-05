@@ -57,10 +57,13 @@ exports.trackTvShow = async (req, res, next) => {
 
 exports.appendSchedule = async (req, res) => {
   try {
-    const { _id, identifier } = req.params;
+    const { _id, identifier, nextAirDate } = req.params;
+
     const targetShow = await tvModel.findById(_id);
     targetShow.identifier = identifier;
-    console.log(targetShow);
+    if (targetShow.nextAirDate !== nextAirDate)
+      targetShow.nextAirDate = nextAirDate;
+
     await targetShow.save();
     return res.status(200).json({ msg: "test" });
   } catch (error) {
